@@ -6,4 +6,5 @@ html:
 
 pdf:
 	scribble --pdf assembler.scrbl
+	mv assembler.pdf eocs-assembler.pdf
 
