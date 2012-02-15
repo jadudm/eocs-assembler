@@ -83,4 +83,3 @@ The following code is provided to get you started (if you choose to use it).
 )
 
 @section{Testing your Parser}
-The file @tt{test-
