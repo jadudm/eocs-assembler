@@ -15,6 +15,7 @@ in our files take one of several forms:
   @item{dest=comp;jump}
   @item{comp;jump}
   @item{dest=comp}
+  @item{comp}
   @item{@@"@"number}
   @item{@@"@"symbol}
   @item{(label)}
@@ -23,7 +24,7 @@ in our files take one of several forms:
 In each case, we need to convert these into the appropriate data structure:
 
 @(itemize
-  @item{The first three become C instructions (substituting @tt{'no-dest}, @tt{'no-comp},
+  @item{The first four become C instructions (substituting @tt{'no-dest}, @tt{'no-comp},
 @tt{'no-jump} where there are no destinations, computations, or jumps specified).}
   @item{The next two become A instructions; the fact that some are numeric and some are
         symbolic does not matter to us at this point. We will treat them the same
@@ -77,9 +78,26 @@ The following code is provided to get you started (if you choose to use it).
 ;; language instruction.
 (define (parse-one-line asm)
   (match asm
-    [(regexp "^\\s*$")
-     'blank-line]
-    [else (error 'parse "NO MATCH: ~a" asm)]))
+    ;; Handle blank lines.
+    [(regexp "^\\s*$") 'blank-line]
+    ;; If all else fails, emit a parse bogon.
+    [else 'parse-bogon]))
 )
 
 @section{Testing your Parser}
+In a second tab in DrRacket, open up the file @tt{test-parse.rkt}. You can change two parameters: whether you want textual testing or GUI testing, and whether you want the output to be noisy. The defaults work well, and will open a graphical browser of your test results. 
+
+Initially, you will see test results that look like this:
+
+@(centered
+  (image "images/test-failure.png" #:scale .7))
+
+Your tests will fail, and you can browse the results to exactly why each test failed. When you 
+have finished implementing your parser, you should get test results that look like the following:
+
+@(centered
+  (image "images/test-success.png" #:scale .7))
+
+
+
+
