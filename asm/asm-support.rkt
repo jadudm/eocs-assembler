@@ -1,5 +1,7 @@
 #lang racket
 
+(require "asm-base.rkt")
+
 (provide extract-dest
          extract-comp
          extract-jump
