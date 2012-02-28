@@ -54,10 +54,10 @@
    
    ;; TEST SUITE
    (test-suite
-    "Testing 'xxx=yyy;' instructions."
+    "Testing 'xxx=yyy' instructions."
     (for-each (λ (d)
                 (for-each (λ (c)
-                            (let ([inst (format "~a=~a;" d c)])
+                            (let ([inst (format "~a=~a" d c)])
                               (test-case
                                inst
                                (check-equal? d (extract-dest inst))
