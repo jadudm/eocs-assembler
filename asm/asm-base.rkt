@@ -3,16 +3,13 @@
 (provide (all-defined-out))
 
 ;; Structures
-(struct A (line value) 
+(struct A (addr value) 
   #:inspector (make-inspector))
 
-(struct C (line dest comp jump)
+(struct C (addr dest comp jump)
   #:inspector (make-inspector))
 
-(struct label (line name) 
-  #:inspector (make-inspector))
-
-(struct comment (text) 
+(struct label (addr name) 
   #:inspector (make-inspector))
 
 ;; Regular expressions
@@ -30,3 +27,12 @@
     [(each-with var body* ...)
      #`(let ([var (void)])
          (set! var body*) ...)]))
+
+(define-syntax (each stx)
+  (syntax-case stx ()
+    [(each [dest body] ...)
+     #`(let ([dest (void)] ...)
+         (set! dest body) ...
+         (first (reverse (list dest ...)))
+         )
+     ]))

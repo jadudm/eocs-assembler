@@ -9,6 +9,8 @@
          @inst->symbol
          @inst->number
          
+         sym
+         
          ;; Random bits
          ;; Exported for testing only.
          string->number-or-symbol
@@ -42,6 +44,20 @@
   (string->symbol
    ;; It must start with alpha characters, and then anything can follow
    (second (regexp-match "([a-zA-Z]+[a-zA-Z0-9_$.]+)" asm))))
+
+
+;; CONTRACT
+;; sym :: (U string symbol) -> symbol
+;; PURPOSE
+;; Returns a new, uniquely numbered symbol using
+;; the first argument as a base.
+(define sym
+  (let ([c 0])
+    (lambda (id)
+      (let ([newsym (string->symbol
+                     (format "~a~a" id c))])
+        (set! c (add1 c))
+        newsym))))
 
 ;; CONTRACT
 ;; extract-comp :: string -> symbol
