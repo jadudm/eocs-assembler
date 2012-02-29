@@ -16,6 +16,8 @@
  ;; addresses in the instruction stream
  "pass-symbol-table.rkt"
  ;; Output
+ "pass-to-binary.rkt"
+ "pass-write-file.rkt"
  ;; For pretty printing.
  racket/pretty)
 
