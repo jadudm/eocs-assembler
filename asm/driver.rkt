@@ -5,10 +5,17 @@
  "asm-base.rkt"
  ;; Helper functions
  "asm-support.rkt"
- ;; Passes
+ ;; PASSES
+ ;; Read the file to a list of strings
  "pass-file-to-los.rkt"
+ ;; Parsing from strings to structures
  "pass-parse.rkt"
+ ;; Annotating instructions with addresses
  "pass-attach-instruction-locations.rkt"
+ ;; Building the symbol table and resolving
+ ;; addresses in the instruction stream
+ "pass-symbol-table.rkt"
+ ;; Output
  ;; For pretty printing.
  racket/pretty)
 
