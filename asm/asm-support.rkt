@@ -60,6 +60,31 @@
         newsym))))
 
 ;; CONTRACT
+;; pad :: string number -> string
+;; PURPOSE
+;; Pads a string with leading zeros.
+(define (pad str ln)
+  (string-append (make-string 
+                  (- ln (string-length str))
+                  #\0) str))
+
+;; CONTRACT
+;; number->15bit :: number -> string
+;; PURPOSE
+;; Converts a number to a binary string,
+;; making sure the number is less than 2^15.
+(define (number->15bit v)
+  (if (< v (expt 2 15))
+      (let ([n (number->string v 2)])
+        (if (< (string-length n) 15)
+            (pad n 15)
+            n))
+      (error (format "~a is not less than ~a." 
+                     v
+                     (expt 2 15)))))
+
+
+;; CONTRACT
 ;; extract-comp :: string -> symbol
 ;; PURPOSE
 ;; Takes an instruction of the form

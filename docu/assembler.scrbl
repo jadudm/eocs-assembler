@@ -14,3 +14,4 @@
 @include-section["read-file.scrbl"]
 @include-section["parse.scrbl"]
 @include-section["attach.scrbl"]
+@include-section["table.scrbl"]

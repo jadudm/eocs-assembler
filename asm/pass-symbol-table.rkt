@@ -3,9 +3,9 @@
 (require "asm-base.rkt"
          "asm-support.rkt")
 
-(provide add-labels-to-table
+(provide init-symbol-table
+         add-labels-to-table
          add-memory-addresses-to-table
-         assign-addresses
          )
 
 ;; Originally, the assembler was written in a purely
@@ -15,6 +15,19 @@
 ;; code is for manipulating the symbol table, which we 
 ;; represent with a hash table.
 (define SYMBOL-TABLE (make-hash))
+
+;; CONTRACT
+;; init-symbol-table
+;; PURPOSE
+;; Loads default symbols into the table.
+(define (init-symbol-table)
+  (map (λ (pair)
+         (table-add! (first pair) (second pair)))
+       `((SP 0) (LCL 1) (ARG 2) (THIS 3) (THAT 4)
+         ,@(map (λ (n)
+                  (list (string->symbol (format "R~a" n)) n))
+                (list 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15))
+         (SCREEN 16384) (KBD 24576))))
 
 ;; CONTRACT
 ;; table-add! :: symbol number -> void
@@ -84,17 +97,9 @@
     ))
 
 ;; CONTRACT
-;; assign-addresses :: (list-of instructions) -> (list-of instructions)
+;; rewrite-with-addresses :: (list-of instructions) -> (list-of instructions)
 ;; PURPOSE
-;; This pass walks through each instruction, rewriting it as we go.
-;; If we find a symbol A instruction, we should replace the symbolic
-;; value with the numberic value stored in the symbol table.
-;; Otherwise, we should keep the instruction as-is.
-(define (assign-addresses loi)
-  (cond
-    [(empty? loi) '()]
-    ;; ...
-    [else
-     (cons (first loi)
-           (assign-addresses (rest loi) ))]
-                             ))
+;; Takes a list of instructions and rewrites the instruction stream
+;; so that no symbolic references remain. 
+(define (rewrite-with-addresses loi)
+  '...)
