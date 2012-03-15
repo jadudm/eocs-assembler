@@ -21,6 +21,9 @@
 (define ASYM-REGEXP #rx"")
 (define LABEL-REGEXP #rx"")
 
+;; Start of memory for symbolic references
+(define START-ADDRESS 16)
+
 ;; Macros
 (define-syntax (each-with stx)
   (syntax-case stx ()
