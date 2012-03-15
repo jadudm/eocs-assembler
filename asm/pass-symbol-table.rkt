@@ -212,8 +212,6 @@
            )]))))
 
 (define (make-list-of-instructions max)
-  ;; Refresh the symbol table
-  (set! SYMBOL-TABLE (make-hash))
   (make-loi 0 max))
 
 (define (hash-same? h1 h2)
@@ -289,9 +287,6 @@
    (case-mem-table)
    (case-rewritten)
    ))
-
-
-
 
 (require rackunit/text-ui rackunit/gui)
 
