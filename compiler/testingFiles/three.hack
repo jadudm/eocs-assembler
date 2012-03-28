@@ -1,0 +1,10 @@
+@3
+D=A
+@2
+D=D-A
+@rand1
+@3
+D=A
+@rand1
+D=D+M
+(END)
