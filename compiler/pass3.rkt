@@ -3,4 +3,6 @@
 
 ;; Takes in nonrecursive code and outputs assembly.
 
-(define 
+#lang racket
+
+(require "base.rkt")
