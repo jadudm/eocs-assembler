@@ -1,0 +1,11 @@
+@3
+D=A
+@5
+D=D+A
+@rand1
+M=D
+@5
+D=A
+@rand1
+D=M+D
+(END)
