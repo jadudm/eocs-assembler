@@ -9,7 +9,8 @@
 
 (define (pass-to-asm input string)
   (cond
-    [(num? id-value)
-     
-    [(simple? id-value)
-     
+    [(empty? input) null]
+    [(num? (id-value input))
+     ]
+    [(simple? (id-value input))
+     ]
