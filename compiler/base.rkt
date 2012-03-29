@@ -3,15 +3,35 @@
 (provide (all-defined-out))
 
 ;; Structures
-(struct E (op lhs rhs)
+
+
+;; Number Structure
+;; contains a
+;; - value
+(struct num (value)
   #:inspector (make-inspector))
 
-
-(struct id (sym simple)
+;; Binop Structure
+;; contains a
+;; - operator
+;; - left hand operand
+;; - right hand operand
+(struct binop (op lhs rhs)
   #:inspector (make-inspector))
 
+;; Simple Structure
+;; contains a
+;; - operator
+;; - left hand operand
+;; - right hand operand
+;; NOTE: lhs and rhs must be num structures!
+(struct simple (op lhs rhs)
+  #:inspector (make-inspector))
 
-
-;; NOT YET COMPLETED, MORE STRUCTURES MUST BE ADDED
-;; AS THE PROJECT CONTINUES AND STRUCTURES ARE NEEDED
+;; Identifier Structure
+;; contains a
+;; - symbol
+;; - number or simple
+(struct id (sym ns)
+  #:inspector (make-inspector))
 
