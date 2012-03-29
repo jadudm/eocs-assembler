@@ -6,3 +6,10 @@
 #lang racket
 
 (require "base.rkt")
+
+(define (pass-to-asm input string)
+  (cond
+    [(num? id-value)
+     
+    [(simple? id-value)
+     
