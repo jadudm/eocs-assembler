@@ -13,7 +13,6 @@
 ;; pass-to-struct : exp -> struct
 (define (pass-to-struct e)
   (cond
-    [(empty? (first e)) '()]
     [(number? (first e)) (num (first e)) (pass-to-struct (rest e))]
     [(symbol? (first e)) (binop (first e) 
                                 (pass-to-struct (rest e)) 
@@ -31,9 +30,10 @@
 ;; pass-add-simple : struct -> struct with simples
 (define (pass-add-simple e)
   (cond
-    [(empty? (first e)) '()]
-    [(num? (first e)) (num (first e)) (pass-add-simple (rest e))]
-    [(binop? (first e)) (simple (first e) 
-                                (pass-add-simple (rest e)) 
-                                (pass-add-simple (rest e)))]
+    [(num? e) e]
+    [(binop? e) (simple (id-sym e) 
+                        (let ([lhs (pass-add-simple e)]) 
+                        (let ([rhs (pass-add-simple e)]))
+                          )
+                 )]
     ))
