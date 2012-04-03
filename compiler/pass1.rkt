@@ -6,6 +6,9 @@
 (printf "thehumancompiler is working. Please wait...")
 
 (require "base.rkt")
+(provide pass-to-struct
+         
+         )
 
 ;; PURPOSE
 ;; Take in an expression and produce num and binop structs
@@ -13,10 +16,10 @@
 ;; pass-to-struct : exp -> struct
 (define (pass-to-struct e)
   (cond
-    [(number? (first e)) (num (first e)) (pass-to-struct (rest e))]
+    [(number? e) (num e)]
     [(symbol? (first e)) (binop (first e) 
-                                (pass-to-struct (rest e)) 
-                                (pass-to-struct (rest e)))]
+                                (pass-to-struct (second e)) 
+                                (pass-to-struct (third e)))]
     )
   )
 
@@ -32,8 +35,7 @@
   (cond
     [(num? e) e]
     [(binop? e) (simple (id-sym e) 
-                        (let ([lhs (pass-add-simple e)]) 
-                        (let ([rhs (pass-add-simple e)]))
-                          )
-                 )]
+                        (pass-add-simple (binop-lhs e)) 
+                        (pass-add-simple (binop-rhs e)))
+                 ]
     ))
