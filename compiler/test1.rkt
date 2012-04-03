@@ -2,7 +2,7 @@
 
 (require "pass1.rkt")
 
-//this is the test code for pass1
+;;this is the test code for pass1
 
 (check-expect (pass-to-struct) (3) (num 3))
 (check-expect (pass-to-struct) (+ 3 5) (binop '+ (num 3) (num 5)))
