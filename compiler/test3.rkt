@@ -1,6 +1,6 @@
 #lang racket
 
-;(require "base.rkt")
+(require "base.rkt")
 (require "pass3.rkt")
 
 (require rackunit)
@@ -10,12 +10,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; empty test
-(check-equal? (pass-to-asm (list empty))
+(check-equal? (pass-to-asm (list ))
               "(END)\n@END\n0;JMP")
 
 ;;single id w/o simple
 
-(check-equal? (pass-to-asm (cons (id 'v1 5) empty)) 
+(check-equal? (pass-to-asm (list (id 'v1 5) empty)) 
               (string-append "@5\n"
                              "D=A\n"
                              "@v1\n"
@@ -23,7 +23,7 @@
                              "(END)\n"
                              "@END\n"
                              "0;JMP"))
-(check-equal? (pass-to-asm (cons (id 'asdf 1) empty)) 
+(check-equal? (pass-to-asm (list (id 'asdf 1) empty)) 
                (string-append"@1\n"
                              "D=A\n"
                              "@asdf\n"
@@ -34,7 +34,7 @@
 
 ;;list of ids w/o simple 
 
-(check-equal? (pass-to-asm (cons (id 'v1 5) (id 'v2 5))) 
+(check-equal? (pass-to-asm (list (id 'v1 5) (id 'v2 5))) 
                (string-append "@5\n"
                               "D=A\n"
                               "@v1\n"
@@ -47,7 +47,7 @@
                               "@END\n"
                               "0;JMP"))
 
-(check-equal? (pass-to-asm (cons (id 'asdf 20) (id 'qwer 10) (id 'v1 5) (id 'v2 4))) 
+(check-equal? (pass-to-asm (list (id 'asdf 20) (id 'qwer 10) (id 'v1 5) (id 'v2 4))) 
               (string-append "@20\n"
                              "D=A\n"
                              "@asdf\n"
@@ -71,7 +71,7 @@
               
 
 ;;single id w/ (binop sym sym) 
-(check-equal? (pass-to-asm (cons (id 'b5b (binop '+ 'asdf 'qwerty)) empty)) 
+(check-equal? (pass-to-asm (list (id 'b5b (binop '+ 'asdf 'qwerty)) empty)) 
               (string-append "@asdf\n"
                              "D=M\n"
                              "@qwerty\n"
@@ -83,7 +83,7 @@
                              "@END\n"
                              "0;JMP"))
 
-(check-equal? (pass-to-asm (cons (id 'v1 (binop '+ 'v2 'v3)) empty)) 
+(check-equal? (pass-to-asm (list (id 'v1 (binop '+ 'v2 'v3)) empty)) 
               (string-append "@v2\n"
                              "D=M\n"
                              "@v3\n"
@@ -99,7 +99,7 @@
 ; bigger test 
 ; (sould add more later)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-(check-equal? (pass-to-asm (cons 
+(check-equal? (pass-to-asm (list 
                             (id 'asdf 6)
                             (id 'v1  10)
                             (id  'v2 1)
