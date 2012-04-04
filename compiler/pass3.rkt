@@ -12,10 +12,10 @@
 (define (pass-to-asm input)
   (cond
     [(empty? input) (prog-end)]
-    [(num? (id-value input))
+    [(num? (id-value (first input)))
      (string-append (asm-num (first input)) (pass-to-asm (rest input)))
      ]
-    [(simple? (id-value input))
+    [(simple? (id-value (first input)))
      (string-append (asm-simple (first input)) (pass-to-asm (rest input)))
      ])
   )
@@ -30,7 +30,7 @@
 
 ; CONTRACT
 ;; input Sim ID -> String
-(define (asm-sim input)
+(define (asm-simple input)
   (string-append "@" (simple-lhs (id-value input)) "\n"
                  (cond
                    [(num? (simple-lhs (id-value input)))
@@ -44,8 +44,8 @@
                    [else
                     "A=M\n"])
                   (cond 
-                    [(equals '+ (simple-op (id-value input))) "D=D+A\n"]
-                    [(equals '- (simple-op (id-value input))) "D=D-A\n"])
+                    [(equal? '+ (simple-op (id-value input))) "D=D+A\n"]
+                    [(equal? '- (simple-op (id-value input))) "D=D-A\n"])
                   "@" (id-sym input) "\nM=D\n"
                   ))
                  

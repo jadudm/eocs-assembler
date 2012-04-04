@@ -32,6 +32,6 @@
 ;; contains a
 ;; - symbol
 ;; - number or simple
-(struct id (sym ns)
+(struct id (sym value)
   #:inspector (make-inspector))
 
