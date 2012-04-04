@@ -14,7 +14,7 @@
 (define (pass-to-asm input)
   (cond
     [(empty? input) (prog-end)]
-    [(num? (id-value (first input)))
+    [(number? (id-value (first input)))
      (string-append (asm-num (first input)) (pass-to-asm (rest input)))
      ]
     [(binop? (id-value (first input)))
@@ -27,7 +27,7 @@
 (define (asm-num input)
   (string-append "@" (stringify (id-value input)) "\n"
                  "D=A\n"
-                 "@" (id-sym input) "\n"
+                 "@" (stringify (id-sym input)) "\n"
                  "M=D\n"))
 
 ; CONTRACT
