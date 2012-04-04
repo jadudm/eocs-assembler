@@ -1,7 +1,5 @@
 ;; Pass 2
 
-;; thehumancompiler was here...
-
 #lang racket
 (require "base.rkt")
 
@@ -27,15 +25,23 @@
                                 (id e (+ c d)))
 |#
 
-(define (pass2 struc)
+  
+(define (last ls)
+  (first (reverse ls)))
+
+(define (pass2 structure)
   (cond
-    [(simple? struc)
-     ;; Hold onto result of recursion and add to list
-     (let ([lhs-result (pass2 simple-lhs)])
-       (let ([rhs-result (pass2 simple-rhs)])
-         ;; lhs-result = (*) // rhs-result = (**) // (id ...) = (***)
-         (list lhs-result
-               rhs-result
-               (id ...))))]
-    
+    [(binop? structure) (let ([lhs (pass2 (binop-lhs structure))]
+                              [rhs (pass2 (binop-rhs structure))])
+                          (append
+                           lhs
+                           rhs
+                           (list
+                            (id (gensym 'bin) (binop (binop-op structure)
+                                                     (id-sym (last lhs))
+                                                     (id-sym (last rhs))
+                                                     )))))]
+                                                     
+                                                     
+    [(num? structure) (list (id (gensym 'num) (num-value structure)))]
     ))
