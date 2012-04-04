@@ -7,6 +7,8 @@
 
 (require "base.rkt")
 
+(provide pass-to-asm)
+
 ; CONTRACT
 ;; input LOIDs -> String
 (define (pass-to-asm input)
