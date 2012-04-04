@@ -11,7 +11,7 @@
 ;; input LOIDs -> String
 (define (pass-to-asm input)
   (cond
-    [(empty? input) "end/0"]
+    [(empty? input) (prog-end)]
     [(num? (id-value input))
      (string-append (asm-num (first input)) (pass-to-asm (rest input)))
      ]
@@ -29,15 +29,28 @@
                  "M=D\n"))
 
 ; CONTRACT
-;; input Sym ID -> String
-(define (asm-sym input)
+;; input Sim ID -> String
+(define (asm-sim input)
   (string-append "@" (simple-lhs (id-value input)) "\n"
                  (cond
-                   [(
-                 "D=A\n"
-                 "@"
+                   [(num? (simple-lhs (id-value input)))
+                   "D=A\n"]
+                   [else
+                    "D=M\n"])
+                  "@" (simple-rhs (id-value input)) "\n"
+                  (cond
+                   [(num? (simple-rhs (id-value input)))
+                   ""]
+                   [else
+                    "A=M\n"])
+                  (cond 
+                    [(equals '+ (simple-op (id-value input))) "D=D+A\n"]
+                    [(equals '- (simple-op (id-value input))) "D=D-A\n"])
+                  "@" (id-sym input) "\nM=D\n"
+                  ))
                  
 ; CONTRACT
 ;; input Nothing -> String
 (define (prog-end)
+   "(END)\n@END\n0,JMP"
   )
