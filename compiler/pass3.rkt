@@ -54,5 +54,5 @@
 ; CONTRACT
 ;; input Nothing -> String
 (define (prog-end)
-  "(END)\n@END\n0,JMP"
+  "(END)\n@END\n0;JMP"
   )
