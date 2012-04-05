@@ -147,11 +147,19 @@
     ))
 
 (define (run file)
+  ;; Read the instruction list into the code memory of the 
+  ;; emulator (or should that be simulator?).
   (let ([num-inst (read-instructions file)])
+    ;; Always initialize the state of the machine.
     (init-state)
+    ;; Then, loop through each instruction.
+    ;; Interpret it.
+    ;; This is often called a "fetch-execute" loop
+    ;; in the world of bytecode interpreters.
     (for ([i (iota num-inst)])
-      (interp (get-code i))
-      )
+      (interp (get-code i)) )
+    ;; Show the state when we're done.
     (show-state)
+    ;; Return the value of RAM location zero.
     (get-ram 0)
     ))
