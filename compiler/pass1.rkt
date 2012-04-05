@@ -3,7 +3,7 @@
 
 #lang racket
 
-(printf "thehumancompiler is working. Please wait...")
+(printf "thehumancompiler is working. Please wait...\n")
 
 (require "base.rkt")
 (provide pass1)
