@@ -6,7 +6,7 @@
 (require rackunit)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; some basic smoke tests
+;; some basic smoke tests ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; empty test
