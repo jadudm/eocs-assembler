@@ -61,7 +61,17 @@
 
 (define (get-code i)
   (hash-ref code i))
-        
+
+;; Symbol table
+(define table (make-hash))
+(define sym-location 1)
+(define (lookup sym)
+  (if (hash-ref table sym (λ () false))
+      (hash-ref table sym)
+      (begin
+        (hash-set! table sym sym-location)
+        (set! sym-location (add1 sym-location))
+        (hash-ref table sym))))
 
 (define (interp-c i)
   (match i
@@ -145,6 +155,11 @@
      (let ([n (string->number 
                (second (regexp-match NUM i)))])
        (set-a! n))]
+    
+    [(regexp CONST)
+     (let ([the-const (second (regexp-match CONST i))])
+       (set-a! (lookup the-const)))]
+       
     ))
 
 (define (run file)
