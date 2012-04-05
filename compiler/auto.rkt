@@ -4,7 +4,9 @@
          "../asm/asm-base.rkt"
          "../asm/asm-support.rkt"
          "base.rkt"
-         "helpers.rkt")
+         "helpers.rkt"
+         "../asm-interp/main.rkt"
+         "driver.rkt")
 
 ;; CONTRACT
 ;; interp :: expression -> number
@@ -56,7 +58,10 @@
   `(,(random-operator) ,(number 50) ,(number 50))
 )
 
-      
+;; CONTRACT
+;; program :: number -> expr
+;; PURPOSE
+;; Generates an n-deep expression  
 (define (program n)
   (cond 
     [(zero? n) (number 50)]
@@ -70,4 +75,36 @@
           ,(program (sub1 n))
                )])
      ]))
+
+(define-check (check-files f1 f2)
+  (check-equal?
+   (file->list f1)
+   (file->list f2)))
+
+
+;;(define current-program (program 1))
+;;(print current-program)
+;;(print current-program)
+
+;  ;;;;;;; ;;;;;   ;;;; ;;;;;;;  ;;;; 
+;     ;    ;      ;;  ;    ;    ;;  ; 
+;     ;    ;      ;        ;    ;     
+;     ;    ;      ;;       ;    ;;    
+;     ;    ;;;;;   ;;      ;     ;;   
+;     ;    ;        ;;     ;      ;;  
+;     ;    ;          ;    ;        ; 
+;     ;    ;          ;    ;        ; 
+;     ;    ;         ;;    ;       ;; 
+;     ;    ;;;;;  ;;;;     ;    ;;;;  
+(define (run-tests)
+(test-suite
+ "random tests for 420"
+ (test-case
+  "test for depth 1"
+  (define current-program (program 1))
+  (driver current-program) ;;gives me assembly in foo.hack
+  ;;run returns the value at RAM 0 = interpreted expression
+  ;;tie together driver and emulator
+  (check-equal? (run "foo.hack") (interp current-program)))))
+
 
