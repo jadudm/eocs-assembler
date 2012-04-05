@@ -2,6 +2,7 @@
 
 #lang racket
 (require "base.rkt")
+(provide pass2)
 
 ;; PURPOSE
 ;; Take in the structures from the previous pass

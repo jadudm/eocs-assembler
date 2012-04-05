@@ -142,7 +142,8 @@
        (interp-d))]
     
     [(regexp NUM)
-     (let ([n (string->number (second (regexp-match NUM i)))])
+     (let ([n (string->number 
+               (second (regexp-match NUM i)))])
        (set-a! n))]
     ))
 
@@ -157,7 +158,7 @@
     ;; This is often called a "fetch-execute" loop
     ;; in the world of bytecode interpreters.
     (for ([i (iota num-inst)])
-      (interp (get-code i)) )
+      (interp (get-code i)))
     ;; Show the state when we're done.
     (show-state)
     ;; Return the value of RAM location zero.
