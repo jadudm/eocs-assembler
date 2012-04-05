@@ -3,6 +3,8 @@
 (require rackunit
         srfi/1)
 
+(provide emulate)
+
 ;; Machine State
 (define state (make-hash))
 
@@ -162,7 +164,7 @@
        
     ))
 
-(define (run file)
+(define (emulate file)
   ;; Read the instruction list into the code memory of the 
   ;; emulator (or should that be simulator?).
   (let ([num-inst (read-instructions file)])

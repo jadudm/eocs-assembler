@@ -8,6 +8,8 @@
          "../asm-interp/main.rkt"
          )
 
+(provide driver)
+
 (define (driver file)
   (let ([sexp (read (open-input-file file))]
         [file-base (second (regexp-match "(.*)\\.420" file))]
@@ -18,6 +20,7 @@
                  #:exists 'replace
                  )])
         (fprintf op str)
+        (newline op)
         (close-output-port op)
         ))))
 
