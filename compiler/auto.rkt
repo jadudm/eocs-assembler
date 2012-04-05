@@ -102,10 +102,20 @@
  "random tests for 420"
  (test-case
   "test for depth 1"
+
   (define current-program (program 1))
-  (driver current-program) ;;gives me assembly in foo.hack
+  (let ([op (open-output-file 
+                 "test1.420"
+                 #:exists 'replace
+                 )])
+        (fprintf op current-program)
+        (newline op)
+        (close-output-port op)
+        )
+  
+  (driver "test1.420") ;;gives me assembly in foo.hack
   ;;run returns the value at RAM 0 = interpreted expression
   ;;tie together driver and emulator
-  (check-equal? (run "foo.hack") (interp current-program)))))
+  (check-equal? (emulate "test1.420") (interp current-program)))))
 
 
