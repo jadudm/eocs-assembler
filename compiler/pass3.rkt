@@ -54,5 +54,5 @@
 ; CONTRACT
 ;; input Nothing -> String
 (define (prog-end)
-  "@0\nD=A\n"
+  "@0\nM=D"
   )
