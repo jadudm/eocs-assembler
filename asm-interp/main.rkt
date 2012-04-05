@@ -70,6 +70,8 @@
     ["-1" -1]
     ["D" (get-d)]
     ["A" (get-a)]
+    ;; The bitwise operations will need to be fixed.
+    ;; They will not stay within a 16-bit number.
     ["!D" (bitwise-not (get-d))]
     ["!A" (bitwise-not (get-a))]
     ["-D" (- (get-d))]

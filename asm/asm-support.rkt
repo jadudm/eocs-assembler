@@ -5,11 +5,12 @@
 (provide extract-dest
          extract-comp
          extract-jump
- 
+         
          @inst->symbol
          @inst->number
          
          sym
+         reset-sym-counter
          snoc
          
          ;; Random bits
@@ -52,13 +53,16 @@
 ;; PURPOSE
 ;; Returns a new, uniquely numbered symbol using
 ;; the first argument as a base.
+(define SYM-COUNTER 0)
 (define sym
-  (let ([c 0])
-    (lambda (id)
-      (let ([newsym (string->symbol
-                     (format "~a~a" id c))])
-        (set! c (add1 c))
-        newsym))))
+  (lambda (id)
+    (let ([newsym (string->symbol
+                   (format "~a~a" id SYM-COUNTER))])
+      (set! SYM-COUNTER (add1 SYM-COUNTER))
+      newsym)))
+
+(define (reset-sym-counter)
+  (set! SYM-COUNTER 0))
 
 ;; CONTRACT
 ;; pad :: string number -> string
