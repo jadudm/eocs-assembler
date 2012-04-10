@@ -34,10 +34,10 @@
 ;; generating random expressions
 (define (number max) 
   (random max (current-pseudo-random-generator))
-)
+  )
 
 (define op null)
-  
+
 ;; CONTRACT
 ;; random-operand :: void
 ;; PURPOSE
@@ -48,7 +48,7 @@
      '+]
     [(0)
      '-]
-))
+    ))
 
 ;; CONTRACT
 ;; random-simple :: expr
@@ -57,7 +57,7 @@
 (define (random-simple)
   
   `(,(random-operator) ,(number 50) ,(number 50))
-)
+  )
 
 ;; CONTRACT
 ;; program :: number -> expr
@@ -74,7 +74,7 @@
         `(,(random-operator) 
           ,(program (sub1 n))
           ,(program (sub1 n))
-               )])
+          )])
      ]))
 
 (define-check (check-files f1 f2)
@@ -97,25 +97,48 @@
 ;     ;    ;          ;    ;        ; 
 ;     ;    ;         ;;    ;       ;; 
 ;     ;    ;;;;;  ;;;;     ;    ;;;;  
-(define (run-tests)
-(test-suite
- "random tests for 420"
- (test-case
-  "test for depth 1"
 
-  (define current-program (program 1))
-  (let ([op (open-output-file 
-                 "test1.420"
+(define (make-case depth runs)
+     (test-case
+      (format "test for depth ~a" depth)
+    (let loop ([n runs])
+      (define current-program (program depth))
+      (let ([op (open-output-file 
+                 (format "inputTests/test~a.420" depth)
                  #:exists 'replace
                  )])
-        (fprintf op current-program)
+        (write current-program op)
         (newline op)
         (close-output-port op)
         )
-  
-  (driver "test1.420") ;;gives me assembly in foo.hack
-  ;;run returns the value at RAM 0 = interpreted expression
-  ;;tie together driver and emulator
-  (check-equal? (emulate "test1.420") (interp current-program)))))
+      
+      (driver (format "inputTests/test~a.420" depth))
+      ;;current-program is in hack
+      ;; driver takes a .420 and returns a .hack
+      ;; emulate takes hack and returns the value at ram 0
+      ;; interp takes hack and interprets the value -> should match with emulate
+      (check-equal? (emulate (format "inputTests/test~a.hack" depth))
+                    (interp current-program))
+      (unless (zero? n)
+        (loop (sub1 n)))
+      )))
 
+(define all-tests
+  (test-suite
+   "random tests for 420"
+   (let loop ([n 15])
+     (unless (zero? n)
+       (make-case n 10)
+       (loop (sub1 n))))))
+
+
+(define GUI true)
+(define NOISY 'quiet)
+(require rackunit/text-ui rackunit/gui)
+
+(if GUI
+    (test/gui all-tests)
+    (printf "Failed ~a tests."
+            (run-tests all-tests 
+                       (if NOISY 'normal 'quiet))))
 
