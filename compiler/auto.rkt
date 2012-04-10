@@ -1,10 +1,6 @@
 #lang racket
 
 (require rackunit
-         "../asm/asm-base.rkt"
-         "../asm/asm-support.rkt"
-         "base.rkt"
-         "helpers.rkt"
          "../asm-interp/main.rkt"
          "driver.rkt")
 
