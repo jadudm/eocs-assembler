@@ -19,15 +19,6 @@
 (struct binop (op lhs rhs)
   #:inspector (make-inspector))
 
-;; Simple Structure
-;; contains a
-;; - operator
-;; - left hand operand
-;; - right hand operand
-;; NOTE: lhs and rhs must be num structures!
-(struct simple (op lhs rhs)
-  #:inspector (make-inspector))
-
 ;; Identifier Structure
 ;; contains a
 ;; - symbol
@@ -45,6 +36,11 @@
 ;; contains a
 ;; - symbol
 (struct goto (sym)
+  #:inspector (make-inspector))
+
+;; set! struct
+;; contains an id and expression
+(struct set! (id e)
   #:inspector (make-inspector))
 
 ;; If0 Structure

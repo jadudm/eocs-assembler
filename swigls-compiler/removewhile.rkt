@@ -1,3 +1,7 @@
 #lang racket
 
-(define removewhile ..)
+(require "base.rkt")
+
+(define (removewhile statement)
+  
+  )
