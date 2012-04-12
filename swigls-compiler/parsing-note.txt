@@ -1,0 +1,10 @@
+How to match zero or more in match...
+
+;; snoc is defined in the other compiler,
+;; I think...
+
+(define (parse sexp)
+  (match sexp
+    [(list 'seq s ... e)
+     (seq (snoc e s))
+    ]))
