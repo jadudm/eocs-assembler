@@ -38,9 +38,9 @@
 (struct goto (sym)
   #:inspector (make-inspector))
 
-;; set! struct
+;; set struct
 ;; contains an id and expression
-(struct set! (id e)
+(struct set (ident e)
   #:inspector (make-inspector))
 
 ;; If0 Structure
