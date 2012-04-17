@@ -5,11 +5,11 @@
 (define (removewhile statement)
   (cond
     [(while0? statement) (seq 
-                          (label (gensym 'TOP)
+                          (label (gensym 'TOP))
                                  (if0 (gensym 'FLAG)
                                       (seq (removewhile while0-body)
                                            (goto TOP))
-                                      (goto (label END))))
+                                      (goto END))
                           (label (gensym 'END)))]
     [(if0? statement) statement (removewhile)]
     [(binop? statement) statement (removewhile)]
