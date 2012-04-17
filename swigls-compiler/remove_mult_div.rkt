@@ -15,15 +15,17 @@
             (let ([val (gensym)]) 
               (remove-mul-div 
                (seq 
-                (set flag 1)
+                (set flag 0)
                 (set val 0)
                 (set inc (remove-mult-div stement-lhs))
                 (while0 flag
                         (seq
                          (if0 inc
-                              (set flag 0)
+                              (set flag 1)
                               (set inc (binop '- inc 1)))
-                         (set value (binop '+ value (remove-mult-div stement-rhs))))))))))]   
+                         (set value (binop '+ value (remove-mult-div stement-rhs)))))
+                ; need to somehow return value
+                (set val val))))))]   
        [(equal? statement-op '*/)
         ;;TODO: figure out divide
         ;; http://en.wikipedia.org/wiki/Division_%28digital%29
