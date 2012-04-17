@@ -10,10 +10,12 @@
                                       (seq (removewhile while0-body)
                                            (goto 'TOP))
                                       (goto 'END))
-                          (label (gensym 'END)))]
-    [(if0? statement) statement (removewhile)]
-    [(binop? statement) statement (removewhile)]
-    [(seq? statement) statement (removewhile)]
-    [(set? statement) statement (removewhile)]
-    [(num? statement) statement (removewhile)]
+                          (label (gensym 'END)))
+                         (removewhile statement)
+                         ]
+    [(if0? statement) statement (removewhile statement)]
+    [(binop? statement) statement (removewhile statement)]
+    [(seq? statement) statement (removewhile statement)]
+    [(set? statement) statement (removewhile statement)]
+    [(num? statement) statement (removewhile statement)]
   ))
