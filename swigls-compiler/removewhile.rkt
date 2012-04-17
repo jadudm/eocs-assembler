@@ -8,13 +8,12 @@
                           (label (gensym 'TOP))
                                  (if0 (gensym 'FLAG)
                                       (seq (removewhile while0-body)
-                                           (goto TOP))
-                                      (goto END))
+                                           (goto 'TOP))
+                                      (goto 'END))
                           (label (gensym 'END)))]
     [(if0? statement) statement (removewhile)]
     [(binop? statement) statement (removewhile)]
     [(seq? statement) statement (removewhile)]
     [(set? statement) statement (removewhile)]
     [(num? statement) statement (removewhile)]
-    [(id? statement) statement (removewhile)]
   ))
