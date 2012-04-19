@@ -4,19 +4,22 @@
 
 (define (removeif statement)
   (cond
-    [(while0? statement)]
+    [(while0? statement) (while0
+                          (removeif (while0-test statement))
+                          (removeif (while0-body statement))
+                          )]
     [(binop? statement)
      (binop (binop-op statement) 
-            (removewhile (binop-lhs statement))
-            (removewhile (binop-rhs statement)))]
+            (removeif (binop-lhs statement))
+            (removeif (binop-rhs statement)))]
 
        
-    [(if0? statement) (if0 (removewhile if0-test) 
-                          (removewhile if0-truecase) 
-                          (removewhile if0-falsecase))]
+    [(if0? statement) (if0 (removeif if0-test) 
+                          (removeif if0-truecase) 
+                          (removeif if0-falsecase))]
    
-    [(seq? statement) (seq (map removewhile (seq-expressions statement)))]
-    [(set? statement) (set (set-ident statement) (removewhile (set-e statement)))]
+    [(seq? statement) (seq (map removeif (seq-expressions statement)))]
+    [(set? statement) (set (set-ident statement) (removeif (set-e statement)))]
     [(num? statement) statement]
     [(variable? statement) statement]
     ))
