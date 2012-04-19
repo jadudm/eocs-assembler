@@ -57,7 +57,7 @@
 ;; input GoTo -> String
 (define (asm-goto input)
   (string-append "@" (stringify (goto-sym input)) "\n"
-                 "jmp;" (stringify (goto-sym input) "\n")
+                 "0;JMP\n")
   )
 
 ; CONTRACT
