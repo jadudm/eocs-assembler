@@ -14,9 +14,28 @@
             (removeif (binop-rhs statement)))]
 
        
-    [(if0? statement) (if0 (removeif if0-test) 
-                          (removeif if0-truecase) 
-                          (removeif if0-falsecase))]
+    [(if0? statement) (if0
+                       (let ([true-label  (gensym 'TRUE-LABEL)]
+                             [false-label (gensym 'FALSE-LABEL)]
+                             [endif-label (gensym 'ENDIF-LABEL)]
+                             [FLAG        (gensym 'FLAG)]
+                             )
+                         (seq
+                          (list
+                           (label true-label)
+                           (set FLAG (removeif (if0-test statement)))
+                           (goto true-label)
+                           (seq
+                            (list
+                             (removeif (if0-truecase statement))
+                             (goto endif-label)
+                             )
+                            )
+                           )
+                          (label endif-label)
+                          )
+                         )
+                       )]
    
     [(seq? statement) (seq (map removeif (seq-expressions statement)))]
     [(set? statement) (set (set-ident statement) (removeif (set-e statement)))]
