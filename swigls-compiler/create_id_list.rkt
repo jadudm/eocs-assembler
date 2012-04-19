@@ -27,11 +27,22 @@
 |#
 
   
+
+#|
+(cond
+                        [(empty? structure) 0]
+                        [else (cons (createids (first (seq-expressions structure)))
+                                    (createids (rest (seq-expressions structure))))]
+|#
+
 (define (last ls)
   (first (reverse ls)))
 
 (define (createids structure)
   (cond
+    [(seq? structure) (map createids (seq-expressions structure))]
+                         
+                         
     [(binop? structure) (let ([lhs (createids (binop-lhs structure))]
                               [rhs (createids (binop-rhs structure))])
                           (append
@@ -59,7 +70,13 @@
                            e
                            (list
                             (id (set-ident structure) (id-sym (last e))))))]
-                                                     
-                                                     
+    [(goto? structure) (list (id (gensym 'goto) (goto-sym structure)))]
+    [(label? structure) (list (id (gensym 'label) (label-sym structure)))]
     [(num? structure) (list (id (gensym 'num) (num-value structure)))]
+    [(symbol? structure) (list (id (gensym 'sym) (symbol-value structure)))]
     ))
+
+(define (unfold loi)
+  (cond
+    [(list? (first loi)) '...]
+    [else '...]))
