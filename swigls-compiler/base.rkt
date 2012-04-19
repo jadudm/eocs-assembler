@@ -11,6 +11,12 @@
 (struct num (value)
   #:inspector (make-inspector))
 
+;; Symbol Structure
+;; contains a
+;; - symbol
+(struct symbol (value)
+  #:inspector (make-inspector))
+
 ;; Binop Structure
 ;; contains a
 ;; - operator
