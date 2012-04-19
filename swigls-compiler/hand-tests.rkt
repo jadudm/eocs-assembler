@@ -21,13 +21,16 @@
  (swigls '(- 9 1) "foo.hack")
  (check-files "foo.hack" "testingFiles/two.hack"))
 (test-case
+ "(* 4 2)"
+ (swigls '(* 4 2) "foo.hack")
+ (check-files "foo.hack" "testingFiles/ten.hack"))
+ "(* 5 3)"
+ (swigls '(* 5 3) "foo.hack")
+ (check-files "foo.hack" "testingFiles/eleven.hack"))
+(test-case
  "(+ 3(- 5 2)"
  (swigls '(+ 3(- 5 2)) "foo.hack")
  (check-files "foo.hack" "testingFiles/three.hack"))
-(test-case
- "(- 3(+ 5 2)"
- (swigls '(- 3(+ 5 2)) "foo.hack")
- (check-files "foo.hack" "testingFiles/four.hack"))
 (test-case
  "(- 3(+ 5 2)"
  (swigls '(- 3(+ 5 2)) "foo.hack")

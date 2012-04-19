@@ -4,6 +4,11 @@
 
 ;; Structures
 
+;; Variable Identifier Structure
+;; contains a
+;; - symbol
+(struct variable (name)
+  #:inspector (make-inspector))
 
 ;; Number Structure
 ;; contains a
