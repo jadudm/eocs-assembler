@@ -4,16 +4,17 @@
 
 ;; Structures
 
-;; Variable Identifier Structure
-;; contains a
-;; - symbol
-(struct variable (name)
-  #:inspector (make-inspector))
-
 ;; Number Structure
 ;; contains a
 ;; - value
 (struct num (value)
+  #:inspector (make-inspector))
+
+;; Jump Structure
+;; contains a
+;; - symbol
+;; - symbol
+(struct jump (jumpsym FLAG)
   #:inspector (make-inspector))
 
 ;; Symbol Structure

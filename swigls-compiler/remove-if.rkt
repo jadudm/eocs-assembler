@@ -15,19 +15,25 @@
 
        
     [(if0? statement) (if0
-                       (let ([true-label  (gensym 'TRUE-LABEL)]
-                             [false-label (gensym 'FALSE-LABEL)]
+                       (let ([false-label (gensym 'FALSE-LABEL)]
                              [endif-label (gensym 'ENDIF-LABEL)]
                              [FLAG        (gensym 'FLAG)]
                              )
                          (seq
                           (list
-                           (label true-label)
                            (set FLAG (removeif (if0-test statement)))
-                           (goto true-label)
+                           (jump 'jne false-label)
+                           ;;(goto false-label)
                            (seq
                             (list
                              (removeif (if0-truecase statement))
+                             (goto endif-label)
+                             )
+                            )
+                           (label false-label)
+                           (seq
+                            (list
+                             (removeif (if0-falsecase statement))
                              (goto endif-label)
                              )
                             )
