@@ -46,5 +46,5 @@
     [(seq? statement) (seq (map removeif (seq-expressions statement)))]
     [(set? statement) (set (set-ident statement) (removeif (set-e statement)))]
     [(num? statement) statement]
-    [(symbol? statement) statement]
+    [(variable? statement) statement]
     ))

@@ -36,7 +36,7 @@
 ;; Symbol Structure
 ;; contains a
 ;; - symbol
-(struct symbol (value)
+(struct variable (value)
   #:inspector (make-inspector))
 
 ;; Binop Structure
