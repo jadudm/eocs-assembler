@@ -36,7 +36,9 @@
                              (goto endif-label)
                              )
                             )
-                           (label (variable endif-label)))))]
+                           (label (variable endif-label)))
+                          )
+                        )]
     
     [(seq? statement) (seq (map removeif (seq-expressions statement)))]
     [(set? statement) (set (set-ident statement) (removeif (set-e statement)))]
