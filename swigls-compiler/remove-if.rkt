@@ -12,17 +12,16 @@
      (binop (binop-op statement) 
             (removeif (binop-lhs statement))
             (removeif (binop-rhs statement)))]
-
-       
-    [(if0? statement) (if0
-                       (let ([false-label (gensym 'FALSE-LABEL)]
+    
+    
+    [(if0? statement) (let ([false-label (gensym 'FALSE-LABEL)]
                              [endif-label (gensym 'ENDIF-LABEL)]
                              [FLAG        (gensym 'FLAG)]
                              )
                          (seq
                           (list
                            (set FLAG (removeif (if0-test statement)))
-                           (jump 'jne false-label)
+                           (jump 'jne (variable false-label))
                            ;;(goto false-label)
                            (seq
                             (list
@@ -37,12 +36,8 @@
                              (goto endif-label)
                              )
                             )
-                           )
-                          (label endif-label)
-                          )
-                         )
-                       )]
-   
+                           (label (variable endif-label)))))]
+    
     [(seq? statement) (seq (map removeif (seq-expressions statement)))]
     [(set? statement) (set (set-ident statement) (removeif (set-e statement)))]
     [(num? statement) statement]
