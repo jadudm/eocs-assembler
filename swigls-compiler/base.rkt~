@@ -33,7 +33,7 @@
 (struct jump (jumpsym FLAG)
   #:inspector (make-inspector))
 
-;; Variable Structure
+;; Symbol Structure
 ;; contains a
 ;; - symbol
 (struct variable (value)
