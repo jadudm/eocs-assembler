@@ -43,7 +43,9 @@
 
 (define (init-state)
   (set-d! 0)
-  (set-a! 0))
+  (set-a! 0)
+  (reset-symbol-table)
+  )
 
 ;; Code state
 (define code (make-hash))
@@ -70,10 +72,18 @@
 (define (lookup sym)
   (if (hash-ref table sym (λ () false))
       (hash-ref table sym)
-      (begin
-        (hash-set! table sym sym-location)
-        (set! sym-location (add1 sym-location))
-        (hash-ref table sym))))
+      (error "No symbol found: ~a~n" sym)))
+(define (new-symbol sym)
+  (let ([current sym-location])
+    (hash-set! table sym current)
+    (set! sym-location (add1 sym-location))
+    current
+  ))
+(define (new-label sym loc)
+  (hash-set! table sym loc)
+  loc)
+(define (reset-symbol-table)
+  (set! table (make-hash)))
 
 (define (interp-c i)
   (match i
@@ -135,36 +145,71 @@
 (define LAB "^\\((.*?)\\)$")
 (define CONST "^@([a-zA-Z_]+[0-9a-zA-Z_]+?)$")
 (define NUM "^@([0-9]+)$")
+(define LABEL "^\\(([a-zA-Z]+[0-9a-zA-Z]*)\\)$")
 
-
-(define (interp i)
+(define (interp i loc)
   (match i
-    [(regexp DCJ) 'NOT_IMPLEMENTED]
+    [(regexp DCJ) 
+     'NOT_IMPLEMENTED]
     
     [(regexp DC)
      (let ([d (second (regexp-match DC i))]
            [c (third (regexp-match DC i))])
        ((interp-dc d) (interp-c c)) 
+       'NEXT
        )]
     
+    [(regexp CJ)
+     (let ([c (second (regexp-match CJ i))]
+           [j (third (regexp-match CJ i))])
+       (set-d! (interp-c c))
+       ;; Return the jump code
+       (string->symbol j))]
+     
     ;; This is essentially a NOP. Only makes sense
     ;; in conjunction with, say, the jump bits.
     [(regexp D)
      (let ([d (second (regexp-match D i))])
-       (interp-d))]
+       (interp-d)
+       'NEXT
+       )]
     
     [(regexp NUM)
      (let ([n (string->number 
                (second (regexp-match NUM i)))])
-       (set-a! n))]
+       (set-a! n)
+       'NEXT
+       )]
     
     [(regexp CONST)
      (let ([the-const (second (regexp-match CONST i))])
-       (set-a! (lookup the-const)))]
+       (set-a! (new-symbol the-const))
+       'NEXT
+       )]
+    
+    [(regexp LABEL)
+     (let ([the-sym (second (regexp-match LABEL i))])
+       (new-label the-sym loc)
+       (set-a! loc)
+       'NEXT
+       )]
        
     ))
 
+(define-syntax (while stx)
+  (syntax-case stx ()
+    [(_ test bodies ...)
+     #`(let loop ()
+         (when test
+           (begin
+             bodies ...
+             (loop))))]))
+             
+     
 (define (emulate file)
+  (define i 0)
+  (define DONE false)
+  
   ;; Read the instruction list into the code memory of the 
   ;; emulator (or should that be simulator?).
   (let ([num-inst (read-instructions file)])
@@ -174,8 +219,17 @@
     ;; Interpret it.
     ;; This is often called a "fetch-execute" loop
     ;; in the world of bytecode interpreters.
-    (for ([i (iota num-inst)])
-      (interp (get-code i)))
+    (while (not DONE)
+      (if (>= i num-inst)
+          (set! DONE true)
+          (let ([result (interp (get-code i) i)])
+            ;;(printf "Interpreting [~a] ~a [~a]~n" i (get-code i) result)
+            (case result
+              ['NEXT (set! i (add1 i))]
+              ['JMP
+               ;;(printf "JUMPING TO ~a~n" i)
+               (set! i (get-a))]))))
+    
     ;; Show the state when we're done.
     (show-state)
     ;; Return the value of RAM location zero.
