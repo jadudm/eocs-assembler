@@ -42,7 +42,7 @@
     [(seq? statement) (seq (map remove-mult (seq-expressions statement)))]
     [(set? statement) (set (set-ident statement) (remove-mult (set-e statement)))]
     [(num? statement) (num (num-value statement))]
-    [(symbol? statement) (symbol (symbol-value statement))]   
+    [(sym? statement) (symbol (symbol-value statement))]   
   ))
 
 

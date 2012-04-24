@@ -2,6 +2,22 @@
 
 (provide (all-defined-out))
 
+;;make hash table
+(define GENSYM-TABLE (make-hash))
+
+;;starts symbols at zero
+(define (sym id)
+ (let ([next (hash-ref GENSYM-TABLE id
+                       (lambda () 0))])
+   (hash-set! GENSYM-TABLE id (add1 next))
+   (string->symbol
+    (format "~a~a" id next))))
+
+;;set symbols back to zero
+(define (reset-syms)
+ (set! GENSYM-TABLE (make-hash)))
+
+
 ;; Structures
 
 ;; Number Structure
@@ -17,10 +33,10 @@
 (struct jump (jumpsym FLAG)
   #:inspector (make-inspector))
 
-;; Symbol Structure
+;; Variable Structure
 ;; contains a
 ;; - symbol
-(struct symbol (value)
+(struct variable (value)
   #:inspector (make-inspector))
 
 ;; Binop Structure

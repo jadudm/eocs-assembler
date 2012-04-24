@@ -35,5 +35,5 @@
     [(seq? statement) (seq (map removewhile (seq-expressions statement)))]
     [(set? statement) (set (set-ident statement) (removewhile (set-e statement)))]
     [(num? statement) statement]
-    [(symbol? statement) statement]
+    [(variable? statement) statement]
   ))
