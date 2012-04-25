@@ -1,9 +1,13 @@
 #lang racket
 
 (require "base.rkt")
+<<<<<<< HEAD
 
 (provide removeif)
 
+=======
+(provide removeif)
+>>>>>>> a35fbbf60adf3bf04aa649e895fca840c6f32c27
 (define (removeif statement)
   (cond
     [(while0? statement) (while0
@@ -18,12 +22,12 @@
     
     [(if0? statement)  (let ([false-label (gensym 'FALSE-LABEL)]
                              [endif-label (gensym 'ENDIF-LABEL)]
-                             [FLAG        (gensym 'FLAG)]
+                             [test        (gensym 'TEST)]
                              )
                          (seq
                           (list
-                           (set FLAG (removeif (if0-test statement)))
-                           (jump 'JNE FLAG (variable false-label))
+                           (set test (removeif (if0-test statement)))
+                           (jump 'JNE (variable test) (variable false-label))
                            ;;(goto false-label)
                            (seq
                             (list

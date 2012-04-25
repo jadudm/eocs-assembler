@@ -67,13 +67,17 @@
 ;; input Jump -> String
 (define (asm-jump input)
   (cond
-    [(variable? (jump-FLAG input))
-     (string-append "@" (stringify (variable-value (jump-FLAG input))) "\n"
-                    "0;JMP\n")]
-    [(num? (jump-FLAG input))
-     (string-append "@" (stringify (num-value (jump-FLAG input))) "\n"
+    [(variable? (jump-test input))
+     (string-append "@" (stringify (variable-value (jump-test input))) "\n"
+                    "D=M\n"
+                    "@" (stringify (variable-value (jump-jumpdest input))) "\n"   
+                    "D;" (stringify (jump-jumpsym input)) "\n")]
+    [(num? (jump-test input))
+     (string-append "@" (stringify (num-value (jump-test input))) "\n"
+                    "D=A\n"
+                    "@" (stringify (variable-value (jump-jumpdest input))) "\n"   
                     "A;" (stringify (jump-jumpsym input)) "\n")]
-    )
+    ))
 
 ; CONTRACT
 ;; input NumberorSymbol -> String

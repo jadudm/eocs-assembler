@@ -1,6 +1,7 @@
 #lang racket
 
 (require "base.rkt")
+(provide remove-mult)
 
 ;;CONTRACT
 ;; nested statement -> nested statment (without * and /)
@@ -16,17 +17,18 @@
               (remove-mult 
                (seq 
                 (list
-                (set flag 0)
-                (set val 0)
+                (set flag (num 0))
+                (set val (num 0))
                 (set inc (remove-mult (binop-lhs statement)))
-                (while0 flag
+                (while0 (variable flag)
                         (seq
-                         (if0 inc
-                              (set flag 1)
-                              (set inc (binop '- inc 1)))
-                         (set val (binop '+ val (remove-mult (binop-rhs statement))))))
+                         (list
+                         (if0 (variable inc)
+                              (set flag (num 1))
+                              (set inc (binop '- (variable inc) (num 1))))
+                         (set val (binop '+ (variable val) (remove-mult (binop-rhs statement)))))))
                 ; need to somehow return value
-                val))))))]    
+                (variable val)))))))]    
        [else
         (binop (binop-op statement) 
                (remove-mult (binop-lhs statement))
@@ -41,8 +43,8 @@
                                   (remove-mult (while0-body statement)))]
     [(seq? statement) (seq (map remove-mult (seq-expressions statement)))]
     [(set? statement) (set (set-ident statement) (remove-mult (set-e statement)))]
-    [(num? statement) (num (num-value statement))]
-    [(sym? statement) (symbol (symbol-value statement))]   
+    [(num? statement) statement]
+    [(variable? statement) statement]   
   ))
 
 
