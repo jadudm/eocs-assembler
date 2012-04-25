@@ -14,14 +14,14 @@
             (removeif (binop-rhs statement)))]
     
     
-    [(if0? statement) (let ([false-label (gensym 'FALSE-LABEL)]
+    [(if0? statement)  (let ([false-label (gensym 'FALSE-LABEL)]
                              [endif-label (gensym 'ENDIF-LABEL)]
                              [FLAG        (gensym 'FLAG)]
                              )
                          (seq
                           (list
                            (set FLAG (removeif (if0-test statement)))
-                           (jump 'jne (variable false-label))
+                           (jump 'JNE FLAG (variable false-label))
                            ;;(goto false-label)
                            (seq
                             (list
