@@ -10,7 +10,7 @@ M=D
 D=M
 @num1
 A=M
-D=D+A
+D=D-A
 @bin0
 M=D
 @0
