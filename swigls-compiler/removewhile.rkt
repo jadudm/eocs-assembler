@@ -2,6 +2,8 @@
 
 (require "base.rkt")
 
+(provide removewhile)
+
 (define (removewhile statement)
   (cond
     [(while0? statement) 
