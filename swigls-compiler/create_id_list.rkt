@@ -58,7 +58,7 @@
                            lhs
                            rhs
                            (list
-                            (id (gensym 'bin) (binop (binop-op structure)
+                            (id (sym 'bin) (binop (binop-op structure)
                                                      (extract-sym (last lhs))
                                                      (extract-sym (last rhs))
                                                      )))))]
@@ -70,7 +70,7 @@
                            truecase
                            falsecase
                            (list
-                            (id (gensym 'if) (if0 (extract-sym (last test))
+                            (id (sym 'if) (if0 (extract-sym (last test))
                                                      (extract-sym (last truecase))
                                                      (extract-sym (last falsecase))
                                                      )))))]
@@ -79,10 +79,10 @@
                            e
                            (list
                             (id (set-ident structure) (extract-sym (last e))))))]
-    [(goto? structure) (list (id (gensym 'goto) (goto-sym structure)))]
-    [(label? structure) (list (id (gensym 'label) (label-sym structure)))]
-    [(num? structure) (list (id (gensym 'num) (num-value structure)))]
-    [(variable? structure) (list (id (gensym 'var) (variable-value structure)))]
+    [(goto? structure) (list (id (sym 'goto) (goto-sym structure)))]
+    [(label? structure) (list (id (sym 'label) (label-sym structure)))]
+    [(num? structure) (list (id (sym 'num) (num-value structure)))]
+    [(symbol? structure) (list (id (sym 'sym) (symbol-value structure)))]
     ))
 
 ;; This function will return the final formatted output of the pass
