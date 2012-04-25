@@ -3,7 +3,7 @@
 (require "base.rkt")
 (provide removewhile)
 
-(provide removewhile)
+(provide (removewhile))
 
 (define (removewhile statement)
   (cond

@@ -3,7 +3,7 @@
 (require "base.rkt")
 <<<<<<< HEAD
 
-(provide removeif)
+(provide (removeif))
 
 =======
 (provide removeif)
