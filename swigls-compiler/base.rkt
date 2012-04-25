@@ -1,6 +1,7 @@
 #lang racket
 
 (provide (all-defined-out))
+(require racket/pretty)
 
 ;;make hash table
 (define GENSYM-TABLE (make-hash))
@@ -93,3 +94,8 @@
 ;; - a list of one or more expressions
 (struct seq (expressions)
   #:inspector (make-inspector))
+
+(define (show e)
+  (pretty-print e)
+  (newline)
+  e)
