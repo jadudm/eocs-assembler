@@ -30,10 +30,10 @@
 ;; contains a
 ;; - symbol
 ;; - symbol
-(struct jump (jumpsym FLAG)
+(struct jump (jumpsym FLAG jumpdest)
   #:inspector (make-inspector))
 
-;; Symbol Structure
+;; Variable Structure
 ;; contains a
 ;; - symbol
 (struct variable (value)

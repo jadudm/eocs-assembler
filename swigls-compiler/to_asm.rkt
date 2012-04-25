@@ -24,6 +24,9 @@
     [(goto? (first input))
      (string-append (asm-goto (first input)) (pass-to-asm (rest input)))
      ]
+    [(jump? (first input))
+     (string-append (asm-jump (first input)) (pass-to-asm (rest input)))
+     ]
     ))
 
 ; CONTRACT
@@ -59,6 +62,18 @@
   (string-append "@" (stringify (goto-sym input)) "\n"
                  "0;JMP\n")
   )
+
+; CONTRACT
+;; input Jump -> String
+(define (asm-jump input)
+  (cond
+    [(variable? (jump-FLAG input))
+     (string-append "@" (stringify (variable-value (jump-FLAG input))) "\n"
+                    "0;JMP\n")]
+    [(num? (jump-FLAG input))
+     (string-append "@" (stringify (num-value (jump-FLAG input))) "\n"
+                    "A;" (stringify (jump-jumpsym input)) "\n")]
+    )
 
 ; CONTRACT
 ;; input NumberorSymbol -> String

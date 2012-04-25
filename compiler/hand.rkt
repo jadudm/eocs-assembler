@@ -4,52 +4,72 @@
          "../asm/asm-base.rkt"
          "../asm/asm-support.rkt"
          "base.rkt"
-         "helpers.rkt")
+         "helpers.rkt"
+         "driver.rkt"
+         "../asm-interp/main.rkt")
 
 (define-check (check-files f1 f2)
+  (reset-syms)
   (check-equal?
    (file->list f1)
    (file->list f2)))
 
-(test-suite
- "hand-written tests for CS420"
- (test-case
-  "(+ 3 5)"
-  (compile '(+ 3 5) "foo.hack")
-  (check-files "foo.hack" "testingFiles/one.hack"))
-(test-case
- "(- 9 1)"
- (compile '(- 9 1) "foo.hack")
- (check-files "foo.hack" "testingFiles/two.hack"))
-(test-case
- "(+ 3(- 5 2)"
- (compile '(+ 3(- 5 2)) "foo.hack")
- (check-files "foo.hack" "testingFiles/three.hack"))
-(test-case
- "(- 3(+ 5 2)"
- (compile '(- 3(+ 5 2)) "foo.hack")
- (check-files "foo.hack" "testingFiles/four.hack"))
-(test-case
- "(- 3(+ 5 2)"
- (compile '(- 3(+ 5 2)) "foo.hack")
- (check-files "foo.hack" "testingFiles/four.hack"))
-(test-case
- "(+(+ 1 2)(- 4 3))"
- (compile '(+(+ 1 2)(- 4 3)) "foo.hack")
- (check-files "foo.hack" "testingFiles/five.hack"))
-(test-case
- "(-(- 8 1)(+ 1 3))"
- (compile '(+(+ 1 2)(- 4 3)) "foo.hack")
- (check-files "foo.hack" "testingFiles/six.hack"))
-(test-case
- "(+(+ 3 5) 5)"
- (compile '(+(+ 1 2)(- 4 3)) "foo.hack")
- (check-files "foo.hack" "testingFiles/seven.hack"))
-(test-case
- "(+(- 3 1) 6))"
- (compile '(+(- 3 1)6) "foo.hack")
- (check-files "foo.hack" "testingFiles/eight.hack"))
-(test-case
- "(-(- 4 2)1)"
- (compile '(-(-4 2)1) "foo.hack")
- (check-files "foo.hack" "testingFiles/nine.hack")))
+(define all-tests
+  (test-suite
+   "hand-written tests for pow compiler"
+   (test-case
+    "(+ 3 5)"
+    (driver "expressions/one.420")
+    (emulate "expressions/one.hack")
+    (check-files "expressions/one.hack" "assemblyFiles/one.hack"))
+   (test-case
+    "(- 9 1)"
+    (driver "expressions/two.420")
+    (emulate "expressions/two.hack")
+    (check-files "expressions/two.hack" "assemblyFiles/two.hack"))
+   (test-case
+    "(+ 3(- 5 2)"
+    (driver "expressions/three.420")
+    (emulate "expressions/three.hack")
+    (check-files "expressions/three.hack" "assemblyFiles/three.hack"))
+   (test-case
+    "(- 3(+ 5 2)"
+    (driver "expressions/four.420")
+    (emulate "expressions/four.hack")
+    (check-files "expressions/four.hack" "assemblyFiles/four.hack"))
+   (test-case
+    "(+(+ 1 2)(- 4 3))"
+    (driver "expressions/five.420")
+    (emulate "expressions/five.hack")
+    (check-files "expressions/five.hack" "assemblyFiles/five.hack"))
+   (test-case
+    "(-(- 8 1)(+ 1 3))"
+    (driver "expressions/six.420")
+    (emulate "expressions/six.hack")
+    (check-files "expressions/six.hack" "assemblyFiles/six.hack"))
+   (test-case
+    "(+(+ 3 5) 5)"
+    (driver "expressions/seven.420")
+    (emulate "expressions/seven.hack")
+    (check-files "expressions/seven.hack" "assemblyFiles/seven.hack"))
+   (test-case
+    "(+(- 3 1) 6))"
+    (driver "expressions/eight.420")
+    (emulate "expressions/eight.hack")
+    (check-files "expressions/eight.hack" "assemblyFiles/eight.hack"))
+   (test-case
+    "(-(- 4 2)1)"
+    (driver "expressions/nine.420")
+    (emulate "expressions/nine.hack")
+    (check-files "expressions/nine.hack" "assemblyFiles/nine.hack"))))
+
+(define GUI true)
+(define NOISY 'quiet)
+(require rackunit/text-ui rackunit/gui)
+
+(if GUI
+    (test/gui all-tests)
+    (printf "Failed ~a tests."
+            (run-tests all-tests 
+                       (if NOISY 'normal 'quiet))))
+
