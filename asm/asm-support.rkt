@@ -10,7 +10,7 @@
          @inst->number
          
          sym
-         reset-sym-counter
+         reset-syms
          snoc
          
          ;; Random bits
@@ -53,16 +53,31 @@
 ;; PURPOSE
 ;; Returns a new, uniquely numbered symbol using
 ;; the first argument as a base.
-(define SYM-COUNTER 0)
-(define sym
-  (lambda (id)
-    (let ([newsym (string->symbol
-                   (format "~a~a" id SYM-COUNTER))])
-      (set! SYM-COUNTER (add1 SYM-COUNTER))
-      newsym)))
+;;(define SYM-COUNTER 0)
+;;(define sym
+;;  (lambda (id)
+;;    (let ([newsym (string->symbol
+;;                   (format "~a~a" id SYM-COUNTER))])
+;;      (set! SYM-COUNTER (add1 SYM-COUNTER))
+;;      newsym)))
 
-(define (reset-sym-counter)
-  (set! SYM-COUNTER 0))
+;;(define (reset-sym-counter)
+;;  (set! SYM-COUNTER 0))
+
+;;make hash table
+(define GENSYM-TABLE (make-hash))
+
+;;starts symbols at zero
+(define (sym id)
+ (let ([next (hash-ref GENSYM-TABLE id
+                       (lambda () 0))])
+   (hash-set! GENSYM-TABLE id (add1 next))
+   (string->symbol
+    (format "~a~a" id next))))
+
+;;set symbols back to zero
+(define (reset-syms)
+ (set! GENSYM-TABLE (make-hash)))
 
 ;; CONTRACT
 ;; pad :: string number -> string
