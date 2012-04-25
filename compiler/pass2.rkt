@@ -1,7 +1,8 @@
 ;; Pass 2
 
 #lang racket
-(require "base.rkt")
+(require "base.rkt"
+         "../asm/asm-support.rkt")
 (provide pass2)
 
 ;; PURPOSE
@@ -38,11 +39,11 @@
                            lhs
                            rhs
                            (list
-                            (id (gensym 'bin) (binop (binop-op structure)
+                            (id (sym 'bin) (binop (binop-op structure)
                                                      (id-sym (last lhs))
                                                      (id-sym (last rhs))
                                                      )))))]
                                                      
                                                      
-    [(num? structure) (list (id (gensym 'num) (num-value structure)))]
+    [(num? structure) (list (id (sym 'num) (num-value structure)))]
     ))
