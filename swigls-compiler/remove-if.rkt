@@ -2,7 +2,7 @@
 
 (require "base.rkt")
 
-(provide (removeif))
+(provide removeif)
 
 (define (removeif statement)
   (cond
