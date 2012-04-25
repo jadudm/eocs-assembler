@@ -82,7 +82,7 @@
     [(goto? structure) (list (id (gensym 'goto) (goto-sym structure)))]
     [(label? structure) (list (id (gensym 'label) (label-sym structure)))]
     [(num? structure) (list (id (gensym 'num) (num-value structure)))]
-    [(symbol? structure) (list (id (gensym 'sym) (symbol-value structure)))]
+    [(variable? structure) (list (id (gensym 'var) (variable-value structure)))]
     ))
 
 ;; This function will return the final formatted output of the pass
