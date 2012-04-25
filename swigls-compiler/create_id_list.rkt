@@ -63,18 +63,16 @@
                                                      (extract-sym (last lhs))
                                                      (extract-sym (last rhs))
                                                      )))))]
-    [(if0? structure) (let ([test (createids (if0-test structure))]
-                              [truecase (createids (if0-truecase structure))]
-                              [falsecase (createids (if0-falsecase structure))])
-                          (append
-                           test
-                           truecase
-                           falsecase
-                           (list
-                            (id (sym 'if) (if0 (extract-sym (last test))
-                                                     (extract-sym (last truecase))
-                                                     (extract-sym (last falsecase))
-                                                     )))))]
+    [(jump? structure) (let ([t (createids (jump-test structure))])
+                         (append
+                          t
+                          (list
+                           (id (sym 'jmp) (jump (jump-jumpsym structure)
+                                                (variable (extract-sym (last t)))
+                                                (jump-jumpdest structure))
+                               ))))]
+                        
+                                                          
     [(set? structure) (let ([e (createids (set-e structure))])
                           (append
                            e
@@ -83,7 +81,7 @@
     [(goto? structure) (list (id (sym 'goto) (goto-sym structure)))]
     [(label? structure) (list (id (sym 'label) (label-sym structure)))]
     [(num? structure) (list (id (sym 'num) (num-value structure)))]
-    [(symbol? structure) (list (id (sym 'sym) (symbol-value structure)))]
+    [(variable? structure) (list (id (sym 'sym) (variable-value structure)))]
     ))
 
 ;; This function will return the final formatted output of the pass

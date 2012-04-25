@@ -143,7 +143,7 @@
 (define CJ "^(.*?);(.*?)$")
 (define D "^([DMA])$")
 (define LAB "^\\((.*?)\\)$")
-(define CONST "^@([a-zA-Z_]+[0-9a-zA-Z_]+?)$")
+(define CONST "^@([a-zA-Z_]+[0-9a-zA-Z_-]+?)$")
 (define NUM "^@([0-9]+)$")
 (define LABEL "^\\(([a-zA-Z]+[0-9a-zA-Z]*)\\)$")
 
@@ -223,11 +223,11 @@
       (if (>= i num-inst)
           (set! DONE true)
           (let ([result (interp (get-code i) i)])
-            ;;(printf "Interpreting [~a] ~a [~a]~n" i (get-code i) result)
+            (printf "Interpreting [~a] ~a [~a]~n" i (get-code i) result)
             (case result
               ['NEXT (set! i (add1 i))]
               ['JMP
-               ;;(printf "JUMPING TO ~a~n" i)
+               (printf "JUMPING TO ~a~n" i)
                (set! i (get-a))]))))
     
     ;; Show the state when we're done.

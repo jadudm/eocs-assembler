@@ -18,15 +18,20 @@
     [(binop? (id-value (first input)))
      (string-append (asm-binop (first input)) (pass-to-asm (rest input)))
      ]
-    [(label? (first input))
+    [(label? (id-value (first input)))
      (string-append (asm-label(first input)) (pass-to-asm (rest input)))
      ]
-    [(goto? (first input))
+    [(goto? (id-value (first input)))
      (string-append (asm-goto (first input)) (pass-to-asm (rest input)))
      ]
-    [(jump? (first input))
+    [(jump? (id-value (first input)))
      (string-append (asm-jump (first input)) (pass-to-asm (rest input)))
      ]
+    [(symbol? (id-value (first input)))
+     (string-append (asm-symbol (first input)) (pass-to-asm (rest input)))
+     ]
+    
+    [else (error (format "~a" (first input)))]
     ))
 
 ; CONTRACT
@@ -66,18 +71,29 @@
 ; CONTRACT
 ;; input Jump -> String
 (define (asm-jump input)
-  (cond
-    [(variable? (jump-test input))
-     (string-append "@" (stringify (variable-value (jump-test input))) "\n"
-                    "D=M\n"
-                    "@" (stringify (variable-value (jump-jumpdest input))) "\n"   
-                    "D;" (stringify (jump-jumpsym input)) "\n")]
-    [(num? (jump-test input))
-     (string-append "@" (stringify (num-value (jump-test input))) "\n"
-                    "D=A\n"
-                    "@" (stringify (variable-value (jump-jumpdest input))) "\n"   
-                    "A;" (stringify (jump-jumpsym input)) "\n")]
-    ))
+  (let ([input (id-value input)])
+    (cond
+      [(variable? (jump-test input))
+       (string-append "@" (stringify (variable-value (jump-test input))) "\n"
+                      "D=M\n"
+                      "@" (stringify (variable-value (jump-jumpdest input))) "\n"   
+                      "D;" (stringify (jump-jumpsym input)) "\n")]
+      [(num? (jump-test input))
+       (string-append "@" (stringify (num-value (jump-test input))) "\n"
+                      "D=A\n"
+                      "@" (stringify (variable-value (jump-jumpdest input))) "\n"   
+                      "A;" (stringify (jump-jumpsym input)) "\n")]
+      [else (error (format "~a" input))]
+      )))
+
+; CONTRACT
+;; input Symbol -> String
+(define (asm-symbol input)
+  (string-append "@" (stringify (id-value input)) "\n"
+                 "D=M\n"
+                 "@" (stringify (id-sym input)) "\n"
+                 "M=D\n")
+  )
 
 ; CONTRACT
 ;; input NumberorSymbol -> String

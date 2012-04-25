@@ -6,10 +6,6 @@
 
 (define (removeif statement)
   (cond
-    [(while0? statement) (while0
-                          (removeif (while0-test statement))
-                          (removeif (while0-body statement))
-                          )]
     [(binop? statement)
      (binop (binop-op statement) 
             (removeif (binop-lhs statement))
@@ -25,25 +21,20 @@
                            (set test (removeif (if0-test statement)))
                            (jump 'JNE (variable test) (variable false-label))
                            ;;(goto false-label)
-                           (seq
-                            (list
-                             (removeif (if0-truecase statement))
-                             (goto endif-label)
-                             )
-                            )
+                           (removeif (if0-truecase statement))
+                           (goto endif-label)
                            (label false-label)
-                           (seq
-                            (list
-                             (removeif (if0-falsecase statement))
-                             (goto endif-label)
-                             )
-                            )
-                           (label (variable endif-label)))
+                           (removeif (if0-falsecase statement))
+                           (goto endif-label)
+                           (label endif-label))
                           )
-                        )]
+                         )]
     
     [(seq? statement) (seq (map removeif (seq-expressions statement)))]
     [(set? statement) (set (set-ident statement) (removeif (set-e statement)))]
     [(num? statement) statement]
     [(variable? statement) statement]
+    [(label? statement) statement]
+    [(goto? statement) statement]
+    [else (error (format "~a" statement))]
     ))
