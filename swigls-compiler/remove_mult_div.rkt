@@ -1,6 +1,7 @@
 #lang racket
 
 (require "base.rkt")
+(provide remove-mult)
 
 ;;CONTRACT
 ;; nested statement -> nested statment (without * and /)

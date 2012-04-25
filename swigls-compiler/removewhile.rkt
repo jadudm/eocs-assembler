@@ -1,6 +1,7 @@
 #lang racket
 
 (require "base.rkt")
+(provide removewhile)
 
 (define (removewhile statement)
   (cond
