@@ -1,13 +1,9 @@
 #lang racket
 
 (require "base.rkt")
-<<<<<<< HEAD
 
 (provide (removeif))
 
-=======
-(provide removeif)
->>>>>>> a35fbbf60adf3bf04aa649e895fca840c6f32c27
 (define (removeif statement)
   (cond
     [(while0? statement) (while0
