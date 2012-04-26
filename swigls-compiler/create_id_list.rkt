@@ -78,8 +78,8 @@
                            e
                            (list
                             (id (set-ident structure) (extract-sym (last e))))))]
-    [(goto? structure) (list (id (sym 'goto) (goto-sym structure)))]
-    [(label? structure) (list (id (sym 'label) (label-sym structure)))]
+    [(goto? structure) (list (id (sym 'goto) (goto (goto-sym structure))))]
+    [(label? structure) (list (id (sym 'label) (label (label-sym structure))))]
     [(num? structure) (list (id (sym 'num) (num-value structure)))]
     [(variable? structure) (list (id (sym 'sym) (variable-value structure)))]
     ))

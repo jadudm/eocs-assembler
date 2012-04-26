@@ -168,7 +168,7 @@
 (define LAB "^\\((.*?)\\) *$")
 (define CONST "^@([a-zA-Z_]+[0-9a-zA-Z_-]*?) *$")
 (define NUM "^@([0-9]+) *$")
-(define LABEL "^\\(([a-zA-Z]+[0-9a-zA-Z]*)\\) *$")
+(define LABEL "^\\(([a-zA-Z]+[0-9a-zA-Z-]*)\\) *$")
 (struct jump (type val) #:inspector (make-inspector))
 
 (define (interp i loc)
@@ -245,6 +245,7 @@
       (cond
         [(regexp-match LABEL (get-code i))
          (let ([the-sym (second (regexp-match LABEL (get-code i)))])
+           (printf "FOUND LABEL: ~a~n" the-sym)
            (new-label the-sym i))]
         [else 'DONOTHING])
       (loop (add1 i)))))
@@ -259,6 +260,7 @@
     ;; Always initialize the state of the machine.
     (init-state)
     (populate-table num-inst)
+    ;;(exit)
     ;; Then, loop through each instruction.
     ;; Interpret it.
     ;; This is often called a "fetch-execute" loop

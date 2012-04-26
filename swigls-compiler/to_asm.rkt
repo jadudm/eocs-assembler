@@ -58,13 +58,13 @@
 ; CONTRACT
 ;; input Label -> String
 (define (asm-label input)
-  (string-append "(" (stringify (label-sym input)) ")")
+  (string-append "(" (stringify (label-sym (id-value input))) ")\n")
   )
 
 ; CONTRACT
 ;; input GoTo -> String
 (define (asm-goto input)
-  (string-append "@" (stringify (goto-sym input)) "\n"
+  (string-append "@" (stringify (goto-sym (id-value input))) "\n"
                  "0;JMP\n")
   )
 
