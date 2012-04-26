@@ -236,7 +236,18 @@
            (begin
              bodies ...
              (loop))))]))
-             
+          
+(define (populate-table num-inst)
+  (define DONE false)
+  (define i 0)
+  (let loop ([i 0])
+    (unless (>= i num-inst)
+      (cond
+        [(regexp-match LABEL (get-code i))
+         (let ([the-sym (second (regexp-match LABEL (get-code i)))])
+           (new-label the-sym i))]
+        [else 'DONOTHING])
+      (loop (add1 i)))))
      
 (define (emulate file)
   (define i 0)
@@ -247,6 +258,7 @@
   (let ([num-inst (read-instructions file)])
     ;; Always initialize the state of the machine.
     (init-state)
+    (populate-table num-inst)
     ;; Then, loop through each instruction.
     ;; Interpret it.
     ;; This is often called a "fetch-execute" loop
