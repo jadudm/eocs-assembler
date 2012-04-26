@@ -1,0 +1,9 @@
+@1 
+D=A
+@8
+(INC)
+M=D
+M=D+1
+D=M
+@INC
+0;JMP

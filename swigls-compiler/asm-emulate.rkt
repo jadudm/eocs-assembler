@@ -161,14 +161,14 @@
     ["A" (get-a)]
     ))
 
-(define DCJ "^(.*?)=(.*?);(.*?)$")
-(define DC "^(.*?)=(.*?)$")
-(define CJ "^(.*?);(.*?)$")
-(define D "^([DMA])$")
-(define LAB "^\\((.*?)\\)$")
-(define CONST "^@([a-zA-Z_]+[0-9a-zA-Z_-]+?)$")
-(define NUM "^@([0-9]+)$")
-(define LABEL "^\\(([a-zA-Z]+[0-9a-zA-Z]*)\\)$")
+(define DCJ "^(.*?)=(.*?);(.*?) *$")
+(define DC "^(.*?)=(.*?) *$")
+(define CJ "^(.*?);(.*?) *$")
+(define D "^([DMA]) *$")
+(define LAB "^\\((.*?)\\) *$")
+(define CONST "^@([a-zA-Z_]+[0-9a-zA-Z_-]+?) *$")
+(define NUM "^@([0-9]+) *$")
+(define LABEL "^\\(([a-zA-Z]+[0-9a-zA-Z]*)\\) *$")
 (struct jump (type val) #:inspector (make-inspector))
 
 (define (interp i loc)
@@ -193,7 +193,12 @@
      (let ([c (second (regexp-match CJ i))]
            [j (third (regexp-match CJ i))])
        ;; First, do whatever the computation says.
-       (jump (string->symbol j) (interp-c c)))]
+       ;; This doesn't go anywhere, because we don't tell it to.
+       ;; That's what a D=C instruction is for. So, the computation
+       ;; really doesn't need to be done...
+       (interp-c c)
+       ;; Then, jump to the contents of the A reg.
+       (jump (string->symbol j) (get-a)))]
        
      
     ;; This is essentially a NOP. Only makes sense
