@@ -166,7 +166,7 @@
 (define CJ "^(.*?);(.*?) *$")
 (define D "^([DMA]) *$")
 (define LAB "^\\((.*?)\\) *$")
-(define CONST "^@([a-zA-Z_]+[0-9a-zA-Z_-]+?) *$")
+(define CONST "^@([a-zA-Z_]+[0-9a-zA-Z_-]*?) *$")
 (define NUM "^@([0-9]+) *$")
 (define LABEL "^\\(([a-zA-Z]+[0-9a-zA-Z]*)\\) *$")
 (struct jump (type val) #:inspector (make-inspector))
