@@ -1,7 +1,8 @@
 #lang racket
 
 (require rackunit
-        srfi/1)
+        srfi/1
+        racket/pretty)
 
 (provide emulate)
 
@@ -23,22 +24,41 @@
 (define (get-a)
   (hash-ref state 'A))
 
+(define (show-ram addr)
+  (hash-ref state addr (λ () +nan.0)))
+
 (define (get-ram addr)
-  (hash-ref state addr (λ () 0)))
+  (hash-ref state addr (λ () 
+                         (newline)
+                         (show-state)
+                         (error (format "[GET-RAM] @ LOC ~a~n" addr)))))
 
 (define (mem)
-  (hash-ref state (get-a) (λ () 0)))
+  (hash-ref state (get-a) (λ () 
+                            (newline)
+                            (show-state)
+                            (error 
+                             (format "[MEM] @ LOC ~a~n" (get-a)))
+                            )))
 
 (define (set-mem! v)
   (hash-set! state (get-a) v))
 
+(define (show-symbol-table)
+  (hash-for-each
+   table (λ (k v)
+           (printf "~a <- ~a~n" k v))))
+
 (define (show-state)
+  (printf "Symbols ===========\n")
+  (show-symbol-table)
+  (printf "RAM ===============\n")
   (printf "D       {~a}~nA       {~a}~n" (get-d) (get-a))
   (let loop ([addr 0])
-    (unless (>= addr 17)
-      (if (< addr 10)
-          (printf "RAM[~a]  {~a}~n" addr (get-ram addr))
-          (printf "RAM[~a] {~a}~n" addr (get-ram addr)))
+    (let ([v (show-ram addr)])
+      (when (integer? v)
+          (printf "RAM[~a]  {~a}~n" addr (get-ram addr))))
+    (unless (> addr 1023)
       (loop (add1 addr)))))
 
 (define (init-state)
@@ -73,12 +93,15 @@
   (if (hash-ref table sym (λ () false))
       (hash-ref table sym)
       (error "No symbol found: ~a~n" sym)))
-(define (new-symbol sym)
-  (let ([current sym-location])
-    (hash-set! table sym current)
-    (set! sym-location (add1 sym-location))
-    current
-  ))
+;; Don't insert duplicates...
+(define (add-symbol sym)
+  (if (hash-ref table sym (λ () false))
+      (lookup sym)
+      (let ([current sym-location])
+        (hash-set! table sym current)
+        (set! sym-location (add1 sym-location))
+        current
+        )))
 (define (new-label sym loc)
   (hash-set! table sym loc)
   loc)
@@ -146,9 +169,16 @@
 (define CONST "^@([a-zA-Z_]+[0-9a-zA-Z_-]+?)$")
 (define NUM "^@([0-9]+)$")
 (define LABEL "^\\(([a-zA-Z]+[0-9a-zA-Z]*)\\)$")
+(struct jump (type val) #:inspector (make-inspector))
 
 (define (interp i loc)
   (match i
+    [(regexp CONST)
+     (let ([the-const (second (regexp-match CONST i))])
+       (set-a! (add-symbol the-const))
+       'NEXT
+       )]
+    
     [(regexp DCJ) 
      'NOT_IMPLEMENTED]
     
@@ -162,9 +192,9 @@
     [(regexp CJ)
      (let ([c (second (regexp-match CJ i))]
            [j (third (regexp-match CJ i))])
-       (set-d! (interp-c c))
-       ;; Return the jump code
-       (string->symbol j))]
+       ;; First, do whatever the computation says.
+       (jump (string->symbol j) (interp-c c)))]
+       
      
     ;; This is essentially a NOP. Only makes sense
     ;; in conjunction with, say, the jump bits.
@@ -181,18 +211,15 @@
        'NEXT
        )]
     
-    [(regexp CONST)
-     (let ([the-const (second (regexp-match CONST i))])
-       (set-a! (new-symbol the-const))
-       'NEXT
-       )]
-    
     [(regexp LABEL)
      (let ([the-sym (second (regexp-match LABEL i))])
        (new-label the-sym loc)
        (set-a! loc)
        'NEXT
        )]
+    
+    ;; Keep going on whitespace.
+    [(regexp "^[:space:]*$") 'NEXT]
        
     ))
 
@@ -222,13 +249,23 @@
     (while (not DONE)
       (if (>= i num-inst)
           (set! DONE true)
-          (let ([result (interp (get-code i) i)])
-            (printf "Interpreting [~a] ~a [~a]~n" i (get-code i) result)
-            (case result
-              ['NEXT (set! i (add1 i))]
-              ['JMP
-               (printf "JUMPING TO ~a~n" i)
-               (set! i (get-a))]))))
+          (let ([next-code (get-code i)])
+            (printf "Interpreting [~a] ~a -> " i (get-code i))
+            
+            (let ([result (interp next-code i)])
+              (printf "~a~n" result)
+              (match result
+                ['NEXT (set! i (add1 i))]
+                [(struct jump (type val))
+                 (match type
+                   ['JMP (set! i val)]
+                   ['JNE (if (not (zero? val))
+                             (set! i val)
+                             (set! i (add1 i)))]
+                   [else
+                    (error (format "NO CASE FOR ~a~n" result))])]
+                [else (error (format "NO CASE FOR ~a~n" result))]
+                )))))
     
     ;; Show the state when we're done.
     (show-state)
