@@ -7,14 +7,14 @@
 (define (removeif statement)
   (cond
     [(binop? statement)
-     (binop (binop-op statement) 
+     (binop (binop-op statement)
             (removeif (binop-lhs statement))
             (removeif (binop-rhs statement)))]
     
     
-    [(if0? statement)  (let ([false-label (gensym 'FALSE-LABEL)]
+    [(if0? statement) (let ([false-label (gensym 'FALSE-LABEL)]
                              [endif-label (gensym 'ENDIF-LABEL)]
-                             [test        (gensym 'TEST)]
+                             [test (gensym 'TEST)]
                              )
                          (seq
                           (list

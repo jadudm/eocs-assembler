@@ -6,10 +6,10 @@
 
 (define (removewhile statement)
   (cond
-    [(while0? statement) 
-                          (let ([top-label (gensym 'TOP)]
-                                [end-label (gensym 'END)]
-                                [FLAG      (gensym 'FLAG)]
+    [(while0? statement)
+                          (let ([top-label (gensym 'TOPWHILE)]
+                                [end-label (gensym 'ENDWHILE)]
+                                [FLAG (gensym 'FLAG)]
                                 )
                             (seq
                              (list
@@ -25,13 +25,13 @@
                               ))
                             )]
     [(binop? statement)
-     (binop (binop-op statement) 
+     (binop (binop-op statement)
             (removewhile (binop-lhs statement))
             (removewhile (binop-rhs statement)))]
 
        
-    [(if0? statement) (if0 (removewhile (if0-test statement)) 
-                          (removewhile (if0-truecase statement)) 
+    [(if0? statement) (if0 (removewhile (if0-test statement))
+                          (removewhile (if0-truecase statement))
                           (removewhile (if0-falsecase statement)))]
    
     [(seq? statement) (seq (map removewhile (seq-expressions statement)))]
