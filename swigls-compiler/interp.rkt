@@ -2,6 +2,7 @@
 
 (require "base.rkt")
 (provide parse)
+(provide interp reset-env)
 
 (define env (make-hash))
 (define (lookup v)
