@@ -44,20 +44,20 @@
 (define (set-mem! v)
   (hash-set! state (get-a) v))
 
-(define (show-symbol-table)
+(define (show-symbol-table prefix)
   (hash-for-each
    table (λ (k v)
-           (printf "~a <- ~a~n" k v))))
+           (printf "~a~a <- ~a~n" prefix k v))))
 
-(define (show-state)
-  (printf "Symbols ===========\n")
-  (show-symbol-table)
-  (printf "RAM ===============\n")
-  (printf "D       {~a}~nA       {~a}~n" (get-d) (get-a))
+(define (show-state prefix)
+  (printf "~aSymbols ===========\n" prefix)
+  (show-symbol-table prefix)
+  (printf "~aRAM ===============\n" prefix)
+  (printf "~aD       {~a}~n~aA       {~a}~n" prefix (get-d) prefix (get-a))
   (let loop ([addr 0])
     (let ([v (show-ram addr)])
       (when (integer? v)
-          (printf "RAM[~a]  {~a}~n" addr (get-ram addr))))
+          (printf "~aRAM[~a]  {~a}~n" prefix addr (get-ram addr))))
     (unless (> addr 1023)
       (loop (add1 addr)))))
 
@@ -167,9 +167,9 @@
 (define D "^([DMA]) *$")
 (define LAB "^\\((.*?)\\) *$")
 (define CONST "^@([a-zA-Z_]+[0-9a-zA-Z_-]*?) *$")
-(define NUM "^@([0-9]+) *$")
+(define NUM "^@(-?[0-9]+) *$")
 (define LABEL "^\\(([a-zA-Z]+[0-9a-zA-Z-]*)\\) *$")
-(struct jump (type val) #:inspector (make-inspector))
+(struct jump (type val dest) #:inspector (make-inspector))
 
 (define (interp i loc)
   (match i
@@ -192,13 +192,11 @@
     [(regexp CJ)
      (let ([c (second (regexp-match CJ i))]
            [j (third (regexp-match CJ i))])
-       ;; First, do whatever the computation says.
-       ;; This doesn't go anywhere, because we don't tell it to.
-       ;; That's what a D=C instruction is for. So, the computation
-       ;; really doesn't need to be done...
-       (interp-c c)
-       ;; Then, jump to the contents of the A reg.
-       (jump (string->symbol j) (get-a)))]
+       ;; Create a jump structure containing...
+       ;; The type of jump
+       ;; the result of the computation
+       ;; then, the destination (if the jump evaluates)
+       (jump (string->symbol j) (interp-c c) (get-a)))]
        
      
     ;; This is essentially a NOP. Only makes sense
@@ -245,12 +243,12 @@
       (cond
         [(regexp-match LABEL (get-code i))
          (let ([the-sym (second (regexp-match LABEL (get-code i)))])
-           (printf "FOUND LABEL: ~a~n" the-sym)
+           ;(printf "FOUND LABEL: ~a~n" the-sym)
            (new-label the-sym i))]
         [else 'DONOTHING])
       (loop (add1 i)))))
      
-(define (emulate file)
+(define (emulate file noisy?)
   (define i 0)
   (define DONE false)
   
@@ -269,17 +267,19 @@
       (if (>= i num-inst)
           (set! DONE true)
           (let ([next-code (get-code i)])
-            (printf "Interpreting [~a] ~a -> " i (get-code i))
+            (when noisy? (printf "[LINE ~a] ~a" i (get-code i)))
             
             (let ([result (interp next-code i)])
-              (printf "~a~n" result)
+              ;(printf "~n\t D[~a]~n\t A[~a] -> " (get-d) (get-a))
+              (when noisy? (printf " -> ~a~n" result))
+              (when noisy? (show-state "\t"))
               (match result
                 ['NEXT (set! i (add1 i))]
-                [(struct jump (type val))
+                [(struct jump (type val dest))
                  (match type
-                   ['JMP (set! i val)]
+                   ['JMP (set! i dest)]
                    ['JNE (if (not (zero? val))
-                             (set! i val)
+                             (set! i dest)
                              (set! i (add1 i)))]
                    [else
                     (error (format "NO CASE FOR ~a~n" result))])]
@@ -287,7 +287,7 @@
                 )))))
     
     ;; Show the state when we're done.
-    (show-state)
+    (show-state "")
     ;; Return the value of RAM location zero.
     (get-ram 0)
     ))
