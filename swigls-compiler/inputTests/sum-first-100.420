@@ -1,0 +1,6 @@
+(seq
+  (set n 100)
+  (set sum 0)
+  (set flag 0)
+  (while0 flag (if0 n (set flag -1) (seq (set sum (+ sum n)) (set n (- n 1)))))
+  sum)
